@@ -1,47 +1,45 @@
-const publicVapidKey = 'BIVqrtU7p6dTkdflzFLk4S6YaK0vsFWBdZrhJqzHjpy7gurBNElQDLnJqE_M11o1my0AGVMOZWoRUzzDZxBdxUA';
+const publicVapidKey =
+  "BJthRQ5myDgc7OSXzPCMftGw-n16F7zQBEN7EUD6XxcfTTvrLGWSIG7y_JxiWtVlCFua0S8MTB5rPziBqNx1qIo";
 
-// Check for service worker in navigator (basically, the API for the browser)
-if('serviceWorker' in navigator) {
+// Check for service worker
+if ("serviceWorker" in navigator) {
   send().catch(err => console.error(err));
 }
 
-//Send Push notification
+// Register SW, Register Push, Send Push
 async function send() {
-
-  // Register SW
-  console.log('Registering service worker...');
-  const register = await navigator.serviceWorker.register('/worker.js', {
-    // Define URLs whereat SW will apply
-    scope: '/'
+  // Register Service Worker
+  console.log("Registering service worker...");
+  const register = await navigator.serviceWorker.register("/worker.js", {
+    scope: "/"
   });
-  console.log('Service Worker registered.');
+  console.log("Service Worker Registered...");
 
-  // Register Push (using browser's push API)
-  console.log('Registering push...');
+  // Register Push
+  console.log("Registering Push...");
   const subscription = await register.pushManager.subscribe({
-    userVisableOnly: true,
+    userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
   });
-  console.log('Push registered.');
+  console.log("Push Registered...");
 
-  // Send push notification - send 'subscription' object to the backend
-  console.log('Sending push...');
-  await fetch('/subscribe', {
-    method: POST,
+  // Send Push Notification
+  console.log("Sending Push...");
+  await fetch("/subscribe", {
+    method: "POST",
     body: JSON.stringify(subscription),
     headers: {
-      'content-type':'application/json'
+      "content-type": "application/json"
     }
   });
-  console.log('Push sent.');
-
+  console.log("Push Sent...");
 }
 
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
