@@ -2,7 +2,7 @@ const express = require('express');
 const webpush = require('web-push');
 const bodyParser = require('body-parser');
 const path = require('path');
-const config = require './config';
+const config = require ('./config');
 
 const app = express();
 
@@ -28,3 +28,7 @@ app.post('/subscribe', (req, res) => {
   webpush.sendNotifcation(subscription, payload).catch(err => console.error(err));
 
 });
+
+const port = 5000;
+
+app.listen(port, () => console.log(`Server started on port: ${port}`));
